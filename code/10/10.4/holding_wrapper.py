@@ -29,6 +29,11 @@ class Holding(object):
             raise TypeError('Expected int')
         self._shares = newshares
 
+    def __setattr__(self, name, value):
+        if name not in ('name', 'date', "shares", "price", '_shares', '_price'):
+            raise AttributeError(f"No attribute {name}")
+        super().__setattr__(name, value)
+
     def __repr__(self):
         return 'Holding({!r},{!r},{!r},{!r})'.format(self.name, self.date, self.shares, self.price)
 
@@ -92,7 +97,7 @@ class ReadOnly:
         return getattr(self._obj, attr)
     def __setattr__(self, attr, value):
         if attr == '_obj':
-            self.__dict__[attr] = value
+            super().__setattr__(attr, value)
         else:
             raise AttributeError(f"ReadOnly object, attribute {attr} can not be set")
 

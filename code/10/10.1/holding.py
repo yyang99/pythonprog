@@ -67,3 +67,4 @@ def read_portfolio(filename):
 
 if __name__ == '__main__':
     portfolio = read_portfolio('../../Data/portfolio.csv')
+    h = Holding('AA', '2001-01-01', 100, 35.0)

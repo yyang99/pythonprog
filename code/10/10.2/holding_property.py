@@ -89,6 +89,6 @@ def read_portfolio(filename):
 
 if __name__ == '__main__':
     portfolio = read_portfolio('../../Data/portfolio.csv')
-    h = Holding('AA', '2020-1-1', '100', 35.5)
+    h = Holding('AA', '2020-1-1', 100, 35.5)
 
     print(f"{h.cost()}")

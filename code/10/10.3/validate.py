@@ -37,3 +37,4 @@ class Holding(object):
     def cost(self):
         return self.shares * self.price
 
+h = Holding('AA', '2001-12-1', 100, 35.0)
