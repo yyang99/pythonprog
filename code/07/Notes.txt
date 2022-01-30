@@ -1,0 +1,71 @@
+1/ h = Holding('AA', '2001-01-01', 200, 25.0)
+   h.price() ===> two operations
+        (1) h.price
+        (2) _()
+
+>>> h.cost()
+2300.0
+>>> h.cost
+<bound method Holding.cost of <__main__.Holding object at 0x10f54f2b0>>
+>>> _()
+2300.0
+
+
+2/  getattr(class, attr) ==> h.price, h.cost (however dot notion do not support attribute name is a variable)
+    setattr(class, attr, value) ==> h.price = 500
+    delattr(class, attr) ==> del(h.price)
+
+# h.price == getattr(h, 'price')
+>>> h.price
+100.0
+>>> getattr(h, price)
+Traceback (most recent call last):
+  File "/Users/yufengyang/.pyenv/versions/3.8.6/lib/python3.8/code.py", line 90, in runcode
+    exec(code, self.locals)
+  File "<input>", line 1, in <module>
+NameError: name 'price' is not defined
+>>> getattr(h, 'price')
+100.0
+
+# h.cost which is a method
+>>> h.cost
+<bound method Holding.cost of <__main__.Holding object at 0x10f54f2b0>>
+>>> getattr(h, 'cost')
+<bound method Holding.cost of <__main__.Holding object at 0x10f54f2b0>>
+>>>
+
+# dot notion h.price do not support variable as attribute name, have to use getattr in this case
+>>> attr = 'price'
+>>> getattr(h, attr)
+100.0
+>>> h.attr
+Traceback (most recent call last):
+  File "/Users/yufengyang/.pyenv/versions/3.8.6/lib/python3.8/code.py", line 90, in runcode
+    exec(code, self.locals)
+  File "<input>", line 1, in <module>
+AttributeError: 'Holding' object has no attribute 'attr'
+
+3/ classmethod used as alternative constructor __init__(...),
+why use variable cls in classmethod instead of a external function or directly hard coded class-name?
+in subclass scanerio, it will also work correctly
+
+Data(2001, 1, 1)
+Data.from_string('2001-01-01')
+
+# however d.from_string also works, why? decorator @classmethod will always pass class name in as the first variable for cls
+
+>>> d = Date(2001, 1, 1)
+>>> d
+<__main__.Date object at 0x1136fe3a0>
+>>> d.__dict__
+{'year': 2001, 'month': 1, 'day': 1}
+
+>>> d1 = Date.from_string('2001-01-01')
+>>> d1.__dict__
+{'year': 2001, 'month': 1, 'day': 1}
+
+>>> d.from_string('2001-01-01')
+<__main__.Date object at 0x113d01430>
+>>> a = d.from_string('2001-01-01')
+>>> a.__dict__
+{'year': 2001, 'month': 1, 'day': 1}
