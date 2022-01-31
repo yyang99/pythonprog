@@ -1,0 +1,35 @@
+1/ python TLD path (sys.path) for search module when import ==> Pycharm run configuration -  env PYTHONPATH
+   current directory (os.getcwd()) run when the python script, access file from python program such as open() ==> Pycharm run configuration - Working Directory
+   pythron script path, ==> Pycharm run configuration - Script Path
+
+>>> runfile('/Users/yufengyang/PlayGround/Python/pythonprog/code/06/6.2/port.py', wdir='/Users/yufengyang/PlayGround/Python/pythonprog/code/06/6.2')
+Total cost: 44671.15
+>>> import sys
+>>> sys.path
+['/Users/yufengyang/PlayGround/Python/pythonprog/code/06/6.2', '/Applications/PyCharm.app/Contents/plugins/python/helpers/pydev', '/Users/yufengyang/PlayGround/Python/pythonprog', '/Users/yufengyang/PlayGround/Python/pythonprog/code', '/Applications/PyCharm.app/Contents/plugins/python/helpers/pycharm_display', '/Applications/PyCharm.app/Contents/plugins/python/helpers/third_party/thriftpy', '/Applications/PyCharm.app/Contents/plugins/python/helpers/pydev', '/Users/yufengyang/.pyenv/versions/3.8.6/lib/python38.zip', '/Users/yufengyang/.pyenv/versions/3.8.6/lib/python3.8', '/Users/yufengyang/.pyenv/versions/3.8.6/lib/python3.8/lib-dynload', '/Users/yufengyang/PlayGround/Python/venv-3.8.6/lib/python3.8/site-packages', '/Applications/PyCharm.app/Contents/plugins/python/helpers/pycharm_matplotlib_backend', '/Users/yufengyang/PlayGround/Python/pythonprog', '/Users/yufengyang/PlayGround/Python/pythonprog/code']
+
+>>> import os
+>>> os.getcwd()
+'/Users/yufengyang/PlayGround/Python/pythonprog/code/06/6.2'
+>>>
+
+2/ two runtime for a python script to be executed
+    (1) at import time, (even class is going to be run as well)
+    (2) at run time (from __main__)
+    (3) use if __name__ == '__main__' to avoid running some scripts at module import time
+
+3/ module ==> a python file
+   package ==> a python directory
+   class ==> like import a module run objects in the class  in a separate namespace
+
+4/ import a module
+    from <module name> import <object name> ==> all objects has been imported, however only expose the object into the current namespace with the same name
+    import <module name> as <new name> ==> import objects from a module and put them under namespace <new name>
+    import <module name> not works with relative import ?
+
+5/ absolute import vs relative import
+    absolute import (from a directory in PYTHONPATH)
+    relative import (.xxx, ..xxx) ==> inside inter-module import under the same package, use relative import
+
+6/ import a package, the __init__.py under the directory will be executed at import time,
+    it can used to import some down level modules or objects inside the package folder so flatten object name hierarchical level in the importing python script
