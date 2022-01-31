@@ -1,0 +1,116 @@
+1/ object attributes in __dict__, and adding a new attribute into obj.__dict__
+
+2/ object class methond is stored in its class object ==> obj.__class__ or type(obj)
+
+3) property object and decorator
+    property is a overriding descriptor ==> class property(fget=None, fset=None, fdel=None, doc=None)
+
+    properity decorator (@property) created name.setter decorator (@price.setter) to hook up with the custom setter method
+    if a custom setter is not defined, the default setter is forbidden to write, so the attribute will be a read-only attribute
+    property decorator wrap getter and setter functions into a peoperity object
+
+# holding.py
+
+class Holding(object):
+    def __init__(self, name, date, shares, price):
+        self.name = name
+        self.date = date
+        self.shares = shares
+        self.price = price
+
+    ...
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, price):
+        if isinstance(price, float):
+            self._price = price
+        else:
+            raise AttributeError(f"price {price} is not a float")
+    ...
+
+4) use descriptor and class inheritance to write generalized type check descriptor class -- Typed()
+    (1) descriptor class Typed(object) methods
+        def __get__(self, instance, cls):
+            ...
+        def __set__(self, instance, value):
+            ...
+
+    (2) class inheritance to subclass Integer(Typed) , Float(Typed), String(Typed)
+
+    (3) class attribute in subclass Integer(Typed) ==> expected_type = int
+        overriding parent class Typed(object) ==> expected_type = object
+
+    (4) object attribute resolution (self.expected_type) to the class attribute (as no object attribute is defined)
+
+# validate.py
+
+class Typed(object):
+    expected_type = object
+
+    def __init__(self, name=None):
+        self.name = name
+
+    def __get__(self, instance, cls):
+        return instance.__dict__[self.name]
+
+    def __set__(self, instance, value):
+        if not isinstance(value, self.expected_type):
+            raise TypeError('Expected {}'.format(self.expected_type))
+        instance.__dict__[self.name] = value
+
+class Integer(Typed):
+    expected_type = int
+
+class Float(Typed):
+    expected_type = float
+
+class String(Typed):
+    expected_type = str
+
+class Holding(object):
+    name = String('name')
+    shares = Integer('shares')
+    price = Float('price')
+    def __init__(self, name, date, shares, price):
+        self.name = name
+        self.date = date
+        self.shares = shares
+        self.price = price
+
+    @property
+    def cost(self):
+        return self.shares * self.price
+
+h = Holding('AA', '2001-12-1', 100, 35.0)
+
+5/ extra -- new methods defined in PEP487
+    __set_name__ (only run at define class time, pass the name of the attribute to the descriptor)
+    __init_subclass__
+
+6/ lazy attribute calculation (a demo of non-overriding descriptor usecase)
+
+# lazy.py
+
+class Lazy:
+    def __init__(self, func):
+        self.func = func
+    def __set_name__(self, owner, name):
+        self.key = name
+    def __get__(self, instance, owner):
+        if instance:
+            value = self.func(instance)
+            instance.__dict__[self.key] = value
+            return value
+        else:
+            return self
+
+class Rectangle:
+    area = Lazy(lambda self: self.length * self.height)
+    perimeter = Lazy(lambda self: 2 * self.height + 2 * self.width)
+    def __init__(self, width, height):
+        self.length = width
+        self.height = height
